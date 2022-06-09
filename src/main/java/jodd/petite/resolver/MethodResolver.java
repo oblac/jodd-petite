@@ -59,6 +59,11 @@ public class MethodResolver {
 		for (final MethodDescriptor methodDescriptor : allMethods) {
 			final Method method = methodDescriptor.getMethod();
 
+			if (method.isSynthetic()) {
+				// ignore synthetic method
+				continue;
+			}
+
 			if (ClassUtil.isBeanPropertySetter(method)) {
 				// ignore setters
 				continue;
