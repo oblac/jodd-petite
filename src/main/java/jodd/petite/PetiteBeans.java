@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /**
@@ -69,12 +70,12 @@ public abstract class PetiteBeans {
 	/**
 	 * Map of all beans definitions.
 	 */
-	protected final Map<String, BeanDefinition> beans = new HashMap<>();
+	protected final Map<String, BeanDefinition> beans = new ConcurrentHashMap<>();
 
 	/**
 	 * Map of alternative beans names.
 	 */
-	protected final Map<String, BeanDefinition> beansAlt = new HashMap<>();
+	protected final Map<String, BeanDefinition> beansAlt = new ConcurrentHashMap<>();
 
 	/**
 	 * Map of all bean scopes.
@@ -224,6 +225,9 @@ public abstract class PetiteBeans {
 		if (beanDefinition == null) {
 			if (petiteConfig.isUseAltBeanNames()) {
 				beanDefinition = beansAlt.get(name);
+				if (beanDefinition == BeanDefinition.NULL) {
+					beanDefinition = null;
+				}
 			}
 		}
 
@@ -434,9 +438,8 @@ public abstract class PetiteBeans {
 
 			if (beansAlt.containsKey(altName)) {
 				final BeanDefinition existing = beansAlt.get(altName);
-
-				if (existing != null) {
-					beansAlt.put(altName, null);		// store null as value to mark that alt name is duplicate
+				if (existing != BeanDefinition.NULL) {
+					beansAlt.put(altName, BeanDefinition.NULL);		// store null as value to mark that alt name is duplicate
 				}
 			}
 			else {

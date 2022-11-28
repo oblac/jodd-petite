@@ -44,6 +44,8 @@ import java.util.function.Consumer;
  */
 public class BeanDefinition<T> {
 
+	public static BeanDefinition NULL = new BeanDefinition("", BeanDefinition.class, null, WiringMode.NONE, null);
+
 	public BeanDefinition(final String name, final Class<T> type, final Scope scope, final WiringMode wiringMode, final Consumer<T> beanInitConsumer) {
 		this.name = name;
 		this.type = type;
